@@ -81,6 +81,7 @@ body {
   height: 420px;
   width: 410px;
   max-height: 731px;
+  position: relative;
 }
 .array {
   display: flex;
@@ -146,6 +147,68 @@ footer {
   font-size: 20px;
 }
 
+/* Compare layout */
+.compare-container {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+}
+.panel {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+.panel-title {
+  background: #f7f7f7;
+  padding: 8px 12px;
+  font-weight: bold;
+  color: #2c3e50;
+}
+.panel .array {
+  height: 360px;
+  width: 100%;
+}
+.complexity {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: #000000;
+  background: rgba(255,255,255,0.9);
+  border-top: 1px solid #e5e5e5;
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+  border-radius: 0;
+  z-index: 3;
+}
+.compare-container .complexity {
+  display: block;
+}
+.panel .controls {
+  display: flex;
+  gap: 0.5rem;
+  padding: 8px 12px;
+  align-items: center;
+}
+.panel select {
+  outline: none;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 8px;
+  background-color: #1abc9c;
+  color: white;
+}
+
 @media screen and (max-width: 600px) {
   .navbar {
     gap: 0.4em;
@@ -170,5 +233,9 @@ footer {
 @media screen and (max-width: 550px) {
   .center {
     width: 95%;
+  }
+  .compare-container {
+    flex-direction: column;
+    padding-inline: 0.5rem;
   }
 }
