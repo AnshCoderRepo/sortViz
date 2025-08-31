@@ -1,8 +1,9 @@
 "use strict";
 class Helper {
-    constructor(time, list = []) {
+    constructor(time, list = [], cancelRef) {
         this.time = parseInt(400/time);
         this.list = list;
+        this.cancelRef = cancelRef;
     }
 
     mark = async (index) => {
@@ -18,6 +19,7 @@ class Helper {
     }
     
     pause = async() => {
+        if (this.cancelRef && this.cancelRef.cancelled) throw new Error("cancelled");
         return new Promise(resolve => {
             setTimeout(() => {
                 resolve();

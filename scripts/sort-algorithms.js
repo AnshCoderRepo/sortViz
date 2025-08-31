@@ -1,10 +1,11 @@
 "use strict";
 class sortAlgorithms {
-    constructor(time) {
-        this.list = document.querySelectorAll(".cell");
+    constructor(time, scope = document, cancelRef = { cancelled: false }) {
+        this.list = scope.querySelectorAll(".cell");
         this.size = this.list.length;
         this.time = time;
-        this.help = new Helper(this.time, this.list);
+        this.cancelRef = cancelRef;
+        this.help = new Helper(this.time, this.list, this.cancelRef);
     }
 
     // BUBBLE SORT
@@ -116,7 +117,7 @@ class sortAlgorithms {
             ++c, ++point) {
                 await this.help.pause();
                 this.list[c].setAttribute("value", newList[point]);
-                this.list[c].style.height = `${3.5*newList[point]}px`;
+                this.list[c].style.height = `${3.8*newList[point]}px`;
         }
         for(let c = start ; c <= end ; ++c) {
             this.list[c].setAttribute("class", "cell");
