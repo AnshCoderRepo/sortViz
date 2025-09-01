@@ -147,6 +147,138 @@ footer {
   font-size: 20px;
 }
 
+/* Step Log Container */
+.step-log-container {
+  margin-top: 1rem;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  background: #f9f9f9;
+  max-height: 200px;
+  overflow: hidden;
+}
+
+.step-log-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: #f0f0f0;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.step-log-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: #2c3e50;
+}
+
+.log-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.log-btn {
+  background: #1abc9c;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: background-color 0.3s;
+}
+
+.log-btn:hover {
+  background: #16a085;
+}
+
+.step-log {
+  padding: 1rem;
+  max-height: 150px;
+  overflow-y: auto;
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.step-log .log-entry {
+  margin-bottom: 0.5rem;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.step-log .log-entry.comparison {
+  color: #2980b9;
+}
+
+.step-log .log-entry.swap {
+  color: #e74c3c;
+}
+
+.step-log .log-entry.done {
+  color: #27ae60;
+}
+
+.step-log .log-entry.info {
+  color: #6c757d;
+  font-style: italic;
+}
+
+.step-log .log-entry.highlighted {
+  background-color: #fff3cd;
+  border-left: 4px solid #ffc107;
+  padding-left: 0.5rem;
+  font-weight: bold;
+}
+
+/* Playback Controls */
+.playback-controls {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1rem auto;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  max-width: 600px;
+  flex-wrap: wrap;
+}
+
+.control-btn {
+  background: #1abc9c;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 120px;
+  justify-content: center;
+}
+
+.control-btn:hover:not(:disabled) {
+  background: #16a085;
+  transform: translateY(-1px);
+}
+
+.control-btn:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.control-btn.playing {
+  background: #e74c3c;
+}
+
+.control-btn.playing:hover {
+  background: #c0392b;
+}
+
 /* Compare layout */
 .compare-container {
   display: flex;

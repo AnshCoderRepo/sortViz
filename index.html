@@ -67,6 +67,30 @@
   <div class="center">
     <div class="complexity complexity-single"></div>
     <div class="array"></div>
+    <div class="step-log-container">
+      <div class="step-log-header">
+        <h3>Step Log</h3>
+        <div class="log-controls">
+          <button class="log-btn" id="clearLog">Clear Log</button>
+          <button class="log-btn" id="exportLog">Export Log</button>
+        </div>
+      </div>
+      <div class="step-log" id="stepLog"></div>
+    </div>
+  </div>
+  <div class="playback-controls">
+    <button class="control-btn" id="playPauseBtn" disabled>
+      <i class="fa fa-play"></i> Play
+    </button>
+    <button class="control-btn" id="stepForwardBtn" disabled>
+      <i class="fa fa-step-forward"></i> Step Forward
+    </button>
+    <button class="control-btn" id="stepBackBtn" disabled>
+      <i class="fa fa-step-backward"></i> Step Back
+    </button>
+    <button class="control-btn" id="resetBtn" disabled>
+      <i class="fa fa-refresh"></i> Reset
+    </button>
   </div>
   <div class="compare-container" style="display:none;">
     <div class="panel left">

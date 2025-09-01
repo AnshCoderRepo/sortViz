@@ -10,6 +10,9 @@ class sortAlgorithms {
 
     // BUBBLE SORT
     BubbleSort = async () => {
+        this.help.logSortingStart("Bubble Sort");
+        this.help.logArrayState();
+        
         for(let i = 0 ; i < this.size - 1 ; ++i) {
             for(let j = 0 ; j < this.size - i - 1 ; ++j) {
                 await this.help.mark(j);
@@ -20,13 +23,16 @@ class sortAlgorithms {
                 await this.help.unmark(j);
                 await this.help.unmark(j+1);
             }
-            this.list[this.size - i - 1].setAttribute("class", "cell done");
+            this.help.markDone(this.size - i - 1);
         }
-        this.list[0].setAttribute("class", "cell done");
+        this.help.markDone(0);
     }
 
     // INSERTION SORT
     InsertionSort = async () => {
+        this.help.logSortingStart("Insertion Sort");
+        this.help.logArrayState();
+        
         for(let i = 0 ; i < this.size - 1 ; ++i) {
             let j = i;
             while(j >= 0 && await this.help.compare(j, j+1)) {
@@ -39,13 +45,14 @@ class sortAlgorithms {
                 j -= 1;
             }
         }
-        for(let counter = 0 ; counter < this.size ; ++counter) {
-            this.list[counter].setAttribute("class", "cell done");
-        }
+        this.help.markAllDone();
     }
 
     // SELECTION SORT
     SelectionSort = async () => {
+        this.help.logSortingStart("Selection Sort");
+        this.help.logArrayState();
+        
         for(let i = 0 ; i < this.size ; ++i) {
             let minIndex = i;
             for(let j = i ; j < this.size ; ++j) {
@@ -63,16 +70,17 @@ class sortAlgorithms {
             await this.help.pause();
             await this.help.swap(minIndex, i);
             await this.help.unmark(minIndex);
-            this.list[i].setAttribute("class", "cell done");
+            this.help.markDone(i);
         }
     }
 
     // MERGE SORT
     MergeSort = async () => {
+        this.help.logSortingStart("Merge Sort");
+        this.help.logArrayState();
+        
         await this.MergeDivider(0, this.size - 1);
-        for(let counter = 0 ; counter < this.size ; ++counter) {
-            this.list[counter].setAttribute("class", "cell done");
-        }
+        this.help.markAllDone();
     }
 
     MergeDivider = async (start, end) => {
@@ -126,10 +134,11 @@ class sortAlgorithms {
 
     // QUICK SORT
     QuickSort = async () => {
+        this.help.logSortingStart("Quick Sort");
+        this.help.logArrayState();
+        
         await this.QuickDivider(0, this.size-1);
-        for(let c = 0 ; c < this.size ; ++c) {
-            this.list[c].setAttribute("class", "cell done");
-        }
+        this.help.markAllDone();
     }
 
     QuickDivider = async (start, end) => {
