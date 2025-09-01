@@ -1,20 +1,40 @@
 "use strict";
 let globalCancelRef = { cancelled: false };
+let currentAlgorithm = null;
+let isPlaying = false;
+let originalArray = [];
 
 const setControlsRunning = (isRunning) => {
   const startBtn = document.querySelector(".start");
   const cancelBtn = document.querySelector(".cancel");
   const selects = document.querySelectorAll(".algo-menu, .size-menu, .speed-menu");
+  const playPauseBtn = document.getElementById('playPauseBtn');
+  const stepForwardBtn = document.getElementById('stepForwardBtn');
+  const stepBackBtn = document.getElementById('stepBackBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  
   if (isRunning) {
     startBtn.style.display = "none";
     cancelBtn.style.display = "inline-block";
     selects.forEach(s => s.setAttribute("disabled", "true"));
     document.querySelector("#random").setAttribute("disabled", "true");
+    
+    // Enable playback controls
+    if (playPauseBtn) playPauseBtn.disabled = false;
+    if (stepForwardBtn) stepForwardBtn.disabled = false;
+    if (stepBackBtn) stepBackBtn.disabled = false;
+    if (resetBtn) resetBtn.disabled = false;
   } else {
     startBtn.style.display = "inline-block";
     cancelBtn.style.display = "none";
     selects.forEach(s => s.removeAttribute("disabled"));
     document.querySelector("#random").removeAttribute("disabled");
+    
+    // Disable playback controls
+    if (playPauseBtn) playPauseBtn.disabled = true;
+    if (stepForwardBtn) stepForwardBtn.disabled = true;
+    if (stepBackBtn) stepBackBtn.disabled = true;
+    if (resetBtn) resetBtn.disabled = true;
   }
 }
 
@@ -41,8 +61,23 @@ const start = async () => {
     return;
   }
 
+  // Store original array state
+  originalArray = Array.from(document.querySelectorAll(".cell")).map(cell => ({
+    value: cell.getAttribute("value"),
+    height: cell.style.height
+  }));
+
   setControlsRunning(true);
   globalCancelRef = { cancelled: false };
+  isPlaying = false;
+  
+  // Reset playback controls
+  updatePlayPauseButton();
+  
+  // Clear previous step log
+  const stepLog = document.getElementById('stepLog');
+  if (stepLog) stepLog.innerHTML = '';
+  
   // show complexity for selected algo below single view
   const singleComplexityEl = document.querySelector(".complexity-single");
   if (singleComplexityEl && algoNames[algoValue]) {
@@ -50,17 +85,100 @@ const start = async () => {
     singleComplexityEl.textContent = `${meta.name} — Time: Avg ${meta.c}, Worst ${meta.w}; Space: ${meta.s}`;
   }
   try {
-    let algorithm = new sortAlgorithms(speedValue, document, globalCancelRef);
-    if (algoValue === 1) await algorithm.BubbleSort();
-    if (algoValue === 2) await algorithm.SelectionSort();
-    if (algoValue === 3) await algorithm.InsertionSort();
-    if (algoValue === 4) await algorithm.MergeSort();
-    if (algoValue === 5) await algorithm.QuickSort();
+    currentAlgorithm = new sortAlgorithms(speedValue, document, globalCancelRef);
+    if (algoValue === 1) await currentAlgorithm.BubbleSort();
+    if (algoValue === 2) await currentAlgorithm.SelectionSort();
+    if (algoValue === 3) await currentAlgorithm.InsertionSort();
+    if (algoValue === 4) await currentAlgorithm.MergeSort();
+    if (algoValue === 5) await currentAlgorithm.QuickSort();
   } catch (e) {
     // cancelled or error
   } finally {
     setControlsRunning(false);
+    currentAlgorithm = null;
   }
+};
+
+const updatePlayPauseButton = () => {
+  const playPauseBtn = document.getElementById('playPauseBtn');
+  if (playPauseBtn) {
+    if (isPlaying) {
+      playPauseBtn.innerHTML = '<i class="fa fa-pause"></i> Pause';
+      playPauseBtn.className = 'control-btn playing';
+    } else {
+      playPauseBtn.innerHTML = '<i class="fa fa-play"></i> Play';
+      playPauseBtn.className = 'control-btn';
+    }
+  }
+};
+
+const togglePlayPause = () => {
+  if (!currentAlgorithm || !currentAlgorithm.help) return;
+  
+  isPlaying = !isPlaying;
+  currentAlgorithm.help.setPaused(!isPlaying);
+  updatePlayPauseButton();
+};
+
+const stepForward = () => {
+  if (!currentAlgorithm || !currentAlgorithm.help) return;
+  
+  const step = currentAlgorithm.help.stepForward();
+  if (step) {
+    // Highlight the step in the log
+    highlightLogEntry(step);
+  }
+};
+
+const stepBack = () => {
+  if (!currentAlgorithm || !currentAlgorithm.help) return;
+  
+  const step = currentAlgorithm.help.stepBack();
+  if (step) {
+    // Highlight the step in the log
+    highlightLogEntry(step);
+  }
+};
+
+const resetSorting = () => {
+  if (!currentAlgorithm || !currentAlgorithm.help) return;
+  
+  currentAlgorithm.help.reset();
+  isPlaying = false;
+  updatePlayPauseButton();
+  
+  // Restore original array state
+  restoreOriginalArray();
+};
+
+const restoreOriginalArray = () => {
+  const cells = document.querySelectorAll(".cell");
+  originalArray.forEach((item, index) => {
+    if (cells[index]) {
+      cells[index].setAttribute("value", item.value);
+      cells[index].style.height = item.height;
+      cells[index].setAttribute("class", "cell");
+    }
+  });
+};
+
+const highlightLogEntry = (step) => {
+  const logEntries = document.querySelectorAll('.log-entry');
+  logEntries.forEach(entry => entry.classList.remove('highlighted'));
+  
+  // Find and highlight the current step
+  const stepText = step.type === 'comparison' 
+    ? `Comparing index ${step.index1} (${step.value1}) with index ${step.index2} (${step.value2})`
+    : step.type === 'swap'
+    ? `Swapping index ${step.index1} (${step.value1}) with index ${step.index2} (${step.value2})`
+    : step.description;
+  
+  logEntries.forEach(entry => {
+    if (entry.textContent === stepText) {
+      entry.classList.add('highlighted');
+      entry.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  });
 };
 
 const RenderScreen = async () => {
@@ -81,6 +199,15 @@ const RenderList = async () => {
     node.style.height = `${3.8 * element}px`;
     arrayNode.appendChild(node);
   }
+  
+  // Clear step log when new array is generated
+  const stepLog = document.getElementById('stepLog');
+  if (stepLog) stepLog.innerHTML = '';
+  
+  // Reset playback state
+  isPlaying = false;
+  updatePlayPauseButton();
+  currentAlgorithm = null;
 };
 
 const RenderArray = async (sorted) => {
@@ -130,10 +257,38 @@ const response = () => {
   }
 };
 
+// Event Listeners
 document.querySelector(".icon").addEventListener("click", response);
 document.querySelector(".start").addEventListener("click", start);
 document.querySelector(".cancel").addEventListener("click", () => {
   globalCancelRef.cancelled = true;
+});
+
+// Playback control event listeners
+document.addEventListener('DOMContentLoaded', () => {
+  const playPauseBtn = document.getElementById('playPauseBtn');
+  const stepForwardBtn = document.getElementById('stepForwardBtn');
+  const stepBackBtn = document.getElementById('stepBackBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const clearLogBtn = document.getElementById('clearLog');
+  const exportLogBtn = document.getElementById('exportLog');
+  
+  if (playPauseBtn) playPauseBtn.addEventListener('click', togglePlayPause);
+  if (stepForwardBtn) stepForwardBtn.addEventListener('click', stepForward);
+  if (stepBackBtn) stepBackBtn.addEventListener('click', stepBack);
+  if (resetBtn) resetBtn.addEventListener('click', resetSorting);
+  
+  if (clearLogBtn) clearLogBtn.addEventListener('click', () => {
+    if (currentAlgorithm && currentAlgorithm.help) {
+      currentAlgorithm.help.clearLog();
+    }
+  });
+  
+  if (exportLogBtn) exportLogBtn.addEventListener('click', () => {
+    if (currentAlgorithm && currentAlgorithm.help) {
+      currentAlgorithm.help.exportLog();
+    }
+  });
 });
 
 // Compare mode
