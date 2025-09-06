@@ -1,6 +1,12 @@
 :root {
-  --primary-color: #1abc9c;
-  --secondary-color: #16a085;
+  --primary-color: #14b8a6;
+  --secondary-color: #0f172a;
+  --bg: #0b0f14;
+  --surface: #111827;
+  --surface-2: #1f2937;
+  --border: #334155;
+  --text: #e5e7eb;
+  --muted: #94a3b8;
 }
 * {
   /* Below is the standard CSS code one should add to get rid of default margins and padding which most of tge HTML elements have */
@@ -78,7 +84,7 @@ body {
 .center {
   margin: 0 auto;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px; /* Added shadow to make page border free */
-  height: 420px;
+  height: 600px;
   width: 410px;
   max-height: 731px;
   position: relative;
@@ -86,8 +92,8 @@ body {
 .array {
   display: flex;
   align-items: flex-start;
-  min-height: 100%;
-  height: 100%;
+  min-height: 0;
+  height: calc(100% - 216px); /* Reserve space for step log to prevent overlap */
   padding: 1rem;
   flex-direction: row;
 }
@@ -370,4 +376,179 @@ footer {
     flex-direction: column;
     padding-inline: 0.5rem;
   }
+}
+
+/* Dark theme overrides */
+body {
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+.center {
+  background: var(--surface);
+}
+
+.navbar {
+  background-color: var(--secondary-color);
+}
+
+.navbar a {
+  background-color: var(--primary-color);
+}
+
+.navbar a:hover {
+  background-color: rgba(20, 184, 166, 0.2);
+}
+
+.navbar #menu {
+  background-color: var(--primary-color);
+  color: #fff;
+}
+
+footer {
+  color: var(--muted);
+}
+
+.step-log-container {
+  background: var(--surface-2);
+  border-color: var(--border);
+}
+
+.step-log-header {
+  background: #111827;
+  border-bottom-color: var(--border);
+}
+
+.step-log {
+  color: var(--text);
+}
+
+.step-log .log-entry.highlighted {
+  background-color: rgba(245, 158, 11, 0.15);
+  border-left: 4px solid #f59e0b;
+}
+
+.playback-controls {
+  background: var(--surface-2);
+}
+
+.control-btn:disabled {
+  background: #475569;
+  color: #cbd5e1;
+}
+
+.panel {
+  border-color: var(--border);
+}
+
+.panel-title {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.complexity {
+  background: rgba(17, 24, 39, 0.9);
+  color: var(--text);
+  border-top-color: var(--border);
+}
+
+.cell {
+  background-color: #374151;
+  color: #e5e7eb;
+}
+
+/* Accent propagation to components */
+.log-btn,
+.control-btn,
+.panel select,
+.navbar #menu {
+  background: var(--primary-color);
+  color: #fff;
+}
+
+.control-btn:hover:not(:disabled),
+.log-btn:hover {
+  filter: brightness(0.9);
+}
+
+.link {
+  color: var(--primary-color);
+}
+
+/* Theme presets - set with <body data-theme="..."> */
+body[data-theme="pure-black-gold"] {
+  --bg: #0d0d0d;
+  --surface: #121212;
+  --surface-2: #1a1a1a;
+  --border: #202124;
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  --primary-color: #facc15; /* Gold */
+  --secondary-color: #121212;
+}
+
+body[data-theme="soft-black-neon-blue"] {
+  --bg: #1a1a1a;
+  --surface: #202124;
+  --surface-2: #111827;
+  --border: #334155;
+  --text: #e5e7eb;
+  --muted: #94a3b8;
+  --primary-color: #3b82f6; /* Neon Blue */
+  --secondary-color: #1a1a1a;
+}
+
+body[data-theme="material-dark-purple"] {
+  --bg: #121212;
+  --surface: #202124;
+  --surface-2: #1f2937;
+  --border: #334155;
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  --primary-color: #8b5cf6; /* Purple */
+  --secondary-color: #121212;
+}
+
+body[data-theme="charcoal-neon-blue"] {
+  --bg: #202124;
+  --surface: #1a1a1a;
+  --surface-2: #111827;
+  --border: #334155;
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  --primary-color: #3b82f6; /* Neon Blue */
+  --secondary-color: #202124;
+}
+
+body[data-theme="slate-neon-blue"] {
+  --bg: #1e293b;
+  --surface: #111827;
+  --surface-2: #1f2937;
+  --border: #334155;
+  --text: #e5e7eb;
+  --muted: #94a3b8;
+  --primary-color: #3b82f6; /* Neon Blue */
+  --secondary-color: #1e293b;
+}
+
+body[data-theme="deep-navy-teal"] {
+  --bg: #0f172a;
+  --surface: #111827;
+  --surface-2: #1f2937;
+  --border: #334155;
+  --text: #e5e7eb;
+  --muted: #94a3b8;
+  --primary-color: #06b6d4; /* Teal */
+  --secondary-color: #0f172a;
+}
+
+body[data-theme="indigo-gold"] {
+  --bg: #2c2c54;
+  --surface: #1a1a1a;
+  --surface-2: #202124;
+  --border: #334155;
+  --text: #f8fafc;
+  --muted: #cbd5e1;
+  --primary-color: #facc15; /* Gold */
+  --secondary-color: #2c2c54;
 }
